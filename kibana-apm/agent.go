@@ -19,7 +19,7 @@ func ProcessExample() {
 	if err != nil {
 		apm.CaptureError(ctx,err)
 	}
-	err = child1(ctx)
+	err = child2(ctx)
 	if err != nil {
 		apm.CaptureError(ctx,err)
 	}

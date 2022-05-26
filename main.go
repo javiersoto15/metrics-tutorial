@@ -1,13 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"net/http"
 	"time"
 
+	"github.com/go-chi/chi/v5"
+
+	"go.elastic.co/apm/module/apmchi/v2"
+
 	"github.com/javiersoto15/metrics/kibana-apm"
-	"go.elastic.co/apm/module/apmhttp"
 )
 
 func main() {
@@ -32,12 +34,9 @@ func main() {
 			<-time.After(time.Duration(sec) * time.Second)
 		}
 	}()
-	mux := http.NewServeMux()
-	mux.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("Test")
-		w.WriteHeader(200)
-	})
-	http.ListenAndServe(":8080", apmhttp.Wrap(mux))
+	r := chi.NewRouter()
+	r.Use(apmchi.Middleware())
+	http.ListenAndServe(":3000", r)
 }
 
 func generateRandomInt(min, max int) int {
